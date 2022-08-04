@@ -371,6 +371,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 492287197}
     m_Modifications:
+    - target: {fileID: 9193900998898318260, guid: 0fe8438cc843a424f9ab8a6c3de7f237,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9193900998898318260, guid: 0fe8438cc843a424f9ab8a6c3de7f237,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9193900998898318260, guid: 0fe8438cc843a424f9ab8a6c3de7f237,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.05724919
+      objectReference: {fileID: 0}
     - target: {fileID: 9193900998898318283, guid: 0fe8438cc843a424f9ab8a6c3de7f237,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -1023,10 +1038,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
