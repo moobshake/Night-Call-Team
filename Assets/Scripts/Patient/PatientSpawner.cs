@@ -5,30 +5,47 @@ using UnityEngine;
 
 public class PatientSpawner : MonoBehaviour
 {   
+
+    // General Patients Count
     public int wellnessCount = 0; 
     public int deathCount = 0;
     public int level = 1; 
-    public TextAsset patientDetails;
-    public Patient patient;
 
-    // Start is called before the first frame update
+    // Patient
+    public TextAsset text;
+    public GameObject patient;
+    public GameObject[] patients;
+
+    // Helps with assigning patient info to prefab
+    private Dictionary<string, string> details;
+    private string[] textArray;
+    private string[] fields;
+
     void Start()
     {   
-        patient = new Patient();
         CreatePatient();
-        // Instantiate(CreatePtient());
     }
 
     void CreatePatient(){
-        print(patientDetails.text);
-        JsonUtility.FromJsonOverwrite(patientDetails.text, patient);
+        PopulateDetails();
         Instantiate(patient);
-        Debug.Log(patient);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PatientInfo patientInfo = (PatientInfo)patient.GetComponent("PatientInfo");
+        patientInfo.Name = details["Name"];
+        patientInfo.Age = details["Age"];
+        patientInfo.Race = details["Race"];
+        patientInfo.Gender = details["Gender"];
+        patientInfo.Condition = details["Condition"];
     }
 
+    void PopulateDetails(){
+        textArray = text.text.Split (new char[] {'\r', '\n'});
+        fields = new[]{"Name", "Age", "Race", "Gender", "Condition"};
+        details = new Dictionary<string, string>();
+
+        for (int i = 0; i < (textArray.Length-1); i++)
+        {   
+            details.Add(fields[i], textArray[i]);
+        }
+    }
+    
 }

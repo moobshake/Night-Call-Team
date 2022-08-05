@@ -107,12 +107,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4892912788869150891}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27d15278a59874c6bb86a851b795bec0, type: 3}
+  m_Script: {fileID: 11500000, guid: e50181f1d22b7447ab4b04ccbcc4443c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Name: 
-  Age: 0
+  Age: 
   Race: 
   Gender: 
   Condition: 
-  Treatment: []

@@ -437,8 +437,9 @@ MonoBehaviour:
   wellnessCount: 0
   deathCount: 0
   level: 1
-  patientDetails: {fileID: 4900000, guid: 611423d81bf9d416ab2fa603f9f6a162, type: 3}
-  patient: {fileID: 5930919443244790857, guid: b463c055d0d9a4048b028ad2bc3d5f8c, type: 3}
+  text: {fileID: 4900000, guid: 01d846eef53b146dba98173abdad5c20, type: 3}
+  patient: {fileID: 4892912788869150891, guid: b463c055d0d9a4048b028ad2bc3d5f8c, type: 3}
+  patients: []
 --- !u!4 &1962090110
 Transform:
   m_ObjectHideFlags: 0
