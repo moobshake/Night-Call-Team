@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Patient
   - Popup
+  - Doctor
+  - Clock
+  - Prompt
+  - Energy
   layers:
   - Default
   - TransparentFX
