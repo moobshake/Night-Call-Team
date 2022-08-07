@@ -19,10 +19,15 @@ public class SC_TPSController : MonoBehaviour
     [HideInInspector]
     public bool canMove = true;
 
+    GameObject prompt;
+    GameObject energy;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
         rotation.y = transform.eulerAngles.y;
+        prompt = GameObject.FindGameObjectWithTag("Prompt");
+        energy = GameObject.FindGameObjectWithTag("Energy");
     }
 
     void Update()
@@ -58,6 +63,31 @@ public class SC_TPSController : MonoBehaviour
             rotation.x = Mathf.Clamp(rotation.x, -lookXLimit, lookXLimit);
             playerCameraParent.localRotation = Quaternion.Euler(rotation.x, 0, 0);
             transform.eulerAngles = new Vector2(0, rotation.y);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "NapBed")
+        {
+            prompt.GetComponent<Prompt>().promptText = "Press E to rest!";
+            prompt.GetComponent<Prompt>().isPromptUpdated = false;
+        }
+        if (other.tag == "Patient")
+        {
+            prompt.GetComponent<Prompt>().promptText = "Collided with patient";
+            prompt.GetComponent<Prompt>().isPromptUpdated = false;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (Input.GetKey(KeyCode.E) && other.tag == "NapBed")
+        {
+            prompt.GetComponent<Prompt>().promptText = "Resting. Hold down 'E' to regain more health!";
+            prompt.GetComponent<Prompt>().isPromptUpdated = false;
+            energy.GetComponent<Energy>().energyLevel += 1;
+            energy.GetComponent<Energy>().isEnergyUpdated = false;
         }
     }
 }

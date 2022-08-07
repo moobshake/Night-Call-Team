@@ -8,6 +8,9 @@ TagManager:
   - Clock
   - Prompt
   - Energy
+  - Patient
+  - Bed
+  - NapBed
   layers:
   - Default
   - TransparentFX
