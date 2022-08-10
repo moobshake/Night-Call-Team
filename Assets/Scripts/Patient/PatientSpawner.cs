@@ -13,6 +13,7 @@ public class PatientSpawner : MonoBehaviour
 
     // Patient
     public TextAsset text;
+    public TextAsset patientFile;
     public GameObject patient;
     public GameObject[] patients;
     private Quaternion sleepPos;
@@ -22,7 +23,8 @@ public class PatientSpawner : MonoBehaviour
     public bool [] occupied;
 
     // Helps with assigning patient info to prefab
-    private Dictionary<string, string> details;
+    private Dictionary<string, Patient> patientsAvail;
+    private Dictionary<int, string> patientIndex;
     private string[] textArray;
     private string[] fields;
 
@@ -31,18 +33,31 @@ public class PatientSpawner : MonoBehaviour
         beds = GameObject.FindGameObjectsWithTag("Bed");
         occupied = new bool[beds.Length];
         sleepPos = Quaternion.Euler(-90,0,0);
-        CreatePatient();
+        CreatePatients();
     }
 
-    void CreatePatient(){
-        PopulateDetails();
-        Instantiate(patient, GetRoom(), sleepPos);
-        PatientInfo patientInfo = (PatientInfo)patient.GetComponent("PatientInfo");
-        patientInfo.Name = details["Name"];
-        patientInfo.Age = details["Age"];
-        patientInfo.Race = details["Race"];
-        patientInfo.Gender = details["Gender"];
-        patientInfo.Condition = details["Condition"];
+    void CreatePatients(){
+        GetPatientInfo();
+
+        // Create patient objects
+        for(int i = 0; i<patientsAvail.Count; i++){
+            Instantiate(patient, GetRoom(), sleepPos);
+        }
+        
+        patients = GameObject.FindGameObjectsWithTag("Patient");
+
+        // Populate patients with details
+        for(int j=0; j<patients.Length-1; j++){
+            PatientInfo info = (PatientInfo)patients[j].GetComponent("PatientInfo");
+            string x = patientIndex[j];
+            Patient p = patientsAvail[x];
+            info.Name = p.Name;
+            info.Age = p.Age;
+            info.Race = p.Race;
+            info.Gender = p.Gender;
+            info.Condition = p.Condition;
+        }
+
     }
 
     Vector3 GetRoom(){
@@ -65,15 +80,17 @@ public class PatientSpawner : MonoBehaviour
         return new Vector3(-10f, -10f, -10f);
     }
 
-    void PopulateDetails(){
-        textArray = text.text.Split (new char[] {'\r', '\n'});
-        fields = new[]{"Name", "Age", "Race", "Gender", "Condition"};
-        details = new Dictionary<string, string>();
+    void GetPatientInfo(){
+        Patients pData = JsonUtility.FromJson<Patients>(patientFile.text);
+        patientsAvail = new Dictionary<string, Patient>();
+        patientIndex = new Dictionary<int, string>();
+        var index = 0;
 
-        for (int i = 0; i < (textArray.Length); i++)
-        {   
-            details.Add(fields[i], textArray[i]);
-        }
+        foreach(Patient p in pData.patients){
+            patientsAvail.Add(p.Name, p);
+            patientIndex.Add(index, p.Name);
+            index++;
+        }  
     }
     
 }

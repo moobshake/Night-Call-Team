@@ -13,6 +13,13 @@
       "Race": "Chinese",
       "Gender": "Male",
       "Condition": "High Blood Pressure"
+    },
+    {
+      "Name": "Mrs Heng",
+      "Age": "65",
+      "Race": "Chinese",
+      "Gender": "Female",
+      "Condition": "Pneumonia"
     }
   ]
 }

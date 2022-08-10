@@ -28,11 +28,11 @@ public class SC_TPSController : MonoBehaviour
     GameObject energy;
     GameObject treatmentMenu;
     Button[] treatmentOptions;
+    string[] optionArray;
     public TextAsset treatmentFile;
     private Dictionary<string, List<string>> treatments;
-    string patientCondition;
-    List<string> patientTreatment;    
-
+    private Dictionary<string, List<string>> treatmentProgress;
+    string currentPatient;
 
 
     void Start()
@@ -42,6 +42,7 @@ public class SC_TPSController : MonoBehaviour
         prompt = GameObject.FindGameObjectWithTag("Prompt");
         energy = GameObject.FindGameObjectWithTag("Energy");
         treatmentMenu = GameObject.FindGameObjectWithTag("TreatmentMenu");
+        treatmentProgress = new Dictionary<string, List<string>>();
         InstantiateTM();
         toggleTreatment.gameObject.SetActive(false);
         treatmentMenu.transform.localScale = new Vector3(0,0,0);
@@ -81,8 +82,6 @@ public class SC_TPSController : MonoBehaviour
             playerCameraParent.localRotation = Quaternion.Euler(rotation.x, 0, 0);
             transform.eulerAngles = new Vector2(0, rotation.y);
         }
-        MakeChoice();
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -98,10 +97,13 @@ public class SC_TPSController : MonoBehaviour
             prompt.GetComponent<Prompt>().isPromptUpdated = false;
             
             PatientInfo patient = other.gameObject.GetComponent<PatientInfo>();
+            if(!treatmentProgress.ContainsKey(patient.Name)){
+                treatmentProgress.Add(patient.Name, treatments[patient.Condition]);
+            }
+
+            currentPatient = patient.Name;
             toggleTreatment.GetComponentInChildren<TMP_Text>().text = "Treat "+ patient.Name;
             toggleTreatment.gameObject.SetActive(true);
-            patientCondition = patient.Condition;
-            patientTreatment = treatments[patientCondition];
 
         }
     }
@@ -121,6 +123,7 @@ public class SC_TPSController : MonoBehaviour
         if(other.tag == "Patient"){
             treatmentMenu.transform.localScale = new Vector3(0,0,0);
             toggleTreatment.gameObject.SetActive(false);
+            currentPatient = " ";
         }
     }
 
@@ -131,8 +134,10 @@ public class SC_TPSController : MonoBehaviour
         foreach(Treatment treatment in tData.treatments){
             List<string> steps = new List<string>(treatment.steps);
             treatments.Add(treatment.condition, steps);
-
+            
             treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
+            optionArray = treatment.options;
+
             for(int i = 0; i<treatmentOptions.Length; i++){
                 var index = i;
                 treatmentOptions[index].onClick.AddListener(delegate{ChooseTreatment(treatment.options[index]);});
@@ -141,40 +146,41 @@ public class SC_TPSController : MonoBehaviour
         }
     }
 
-
-    // Temp function since I can't click
-    private void MakeChoice(){
-        if(Input.GetKeyDown(KeyCode.U)){
-            ChooseTreatment("Start Oxygen");
-        }else if(Input.GetKeyDown(KeyCode.I)){
-            print("Clicked 2");
-            ChooseTreatment("Start Fluid");
-        }else if(Input.GetKeyDown(KeyCode.O)){
-            ChooseTreatment("Capillary Blood Glucose");
-        }else if(Input.GetKeyDown(KeyCode.P)){
-            ChooseTreatment("Administer Medicine");
+    private void ResetListeners(){
+        treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
+        for(int i = 0; i<treatmentOptions.Length; i++){
+            var index = i;
+            treatmentOptions[index].onClick.RemoveAllListeners();
+            treatmentOptions[index].onClick.AddListener(delegate{ChooseTreatment(optionArray[index]);});
         }
     }
-
 
     private void ChooseTreatment(string choice){
+        List<string> curT = new List<string>(treatmentProgress[currentPatient]);
+
+        print("does it contain " + curT.Contains(choice));
 
         string outcome = "";
-        if(patientTreatment.Count == 0){
-            print("Patient has been treated");
-        }else{
-            if(string.Compare(patientTreatment[0], choice) == 0){
-                treatments[patientCondition].RemoveAt(0);
-                outcome = "Correct choice!";
 
-                if(patientTreatment.Count == 0){
-                    outcome = "You made the right choice, patient is treated!";
-                }
-            }else{
-                outcome = "Wrong choice :(";
-            }
+        if(curT.Contains(choice)){
+            curT.Remove(choice);
+            outcome = "Correct choice!";
+            treatmentProgress[currentPatient] = curT;
+
+        }else{
+            outcome = "Wrong choice D:";
         }
-            prompt.GetComponent<Prompt>().promptText = outcome;
-            prompt.GetComponent<Prompt>().isPromptUpdated = false;
+
+        if(treatmentProgress[currentPatient].Count == 1){
+            outcome = "Congrats " + currentPatient + " has been treated";
+            treatmentProgress.Remove(currentPatient);
+            currentPatient = "";
+        }
+
+        ResetListeners();
+        prompt.GetComponent<Prompt>().promptText = outcome;
+        prompt.GetComponent<Prompt>().isPromptUpdated = false;
     }
+
+   
 }

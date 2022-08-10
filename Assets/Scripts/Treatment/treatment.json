@@ -2,7 +2,17 @@
   "treatments": [
     {
       "condition": "High Blood Pressure",
-      "steps": ["Administer Medicine"],
+      "steps": ["Administer Medicine", "Cured"],
+      "options": [
+        "Start Oxygen",
+        "Start Fluid",
+        "Capillary Blood Glucose",
+        "Administer Medicine"
+      ]
+    },
+    {
+      "condition": "Pneumonia",
+      "steps": ["Start Oxygen", "Start Fluid", "Administer Medicine", "Cured"],
       "options": [
         "Start Oxygen",
         "Start Fluid",
