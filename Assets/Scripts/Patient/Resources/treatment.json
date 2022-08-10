@@ -1,0 +1,8 @@
+{
+  "treatments": [
+    {
+      "condition": "High Blood Pressure",
+      "steps": ["Administer Medicine"]
+    }
+  ]
+}

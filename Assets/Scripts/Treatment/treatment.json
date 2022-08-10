@@ -1,0 +1,14 @@
+{
+  "treatments": [
+    {
+      "condition": "High Blood Pressure",
+      "steps": ["Administer Medicine"],
+      "options": [
+        "Start Oxygen",
+        "Start Fluid",
+        "Capillary Blood Glucose",
+        "Administer Medicine"
+      ]
+    }
+  ]
+}

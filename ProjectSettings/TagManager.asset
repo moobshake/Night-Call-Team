@@ -11,6 +11,7 @@ TagManager:
   - Patient
   - Bed
   - NapBed
+  - TreatmentMenu
   layers:
   - Default
   - TransparentFX
