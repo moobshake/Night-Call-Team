@@ -11,6 +11,7 @@ TagManager:
   - Patient
   - Bed
   - NapBed
+  - Alert
   layers:
   - Default
   - TransparentFX
