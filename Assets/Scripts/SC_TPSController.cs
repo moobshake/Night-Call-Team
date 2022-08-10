@@ -117,7 +117,13 @@ public class SC_TPSController : MonoBehaviour
         }
     }
 
-    // For Treatment
+    private void OnTriggerExit(Collider other) {
+        if(other.tag == "Patient"){
+            treatmentMenu.transform.localScale = new Vector3(0,0,0);
+            toggleTreatment.gameObject.SetActive(false);
+        }
+    }
+
     private void InstantiateTM(){
         Treatments tData = JsonUtility.FromJson<Treatments>(treatmentFile.text);
         treatments = new Dictionary<string, List<string>>();

@@ -18,7 +18,7 @@ public class ToggleMenu : MonoBehaviour
             if(current == hide){
                 Popup.transform.localScale = show;
             }else{
-                Popup.transform.localScale = show;
+                Popup.transform.localScale = hide;
             }
         }
     }

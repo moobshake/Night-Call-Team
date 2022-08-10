@@ -1,0 +1,18 @@
+{
+  "patients": [
+    {
+      "Name": "Mr See",
+      "Age": "55",
+      "Race": "Malay",
+      "Gender": "Male",
+      "Condition": "High Blood Pressure"
+    },
+    {
+      "Name": "Mr Tan",
+      "Age": "40",
+      "Race": "Chinese",
+      "Gender": "Male",
+      "Condition": "High Blood Pressure"
+    }
+  ]
+}
