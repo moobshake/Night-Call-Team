@@ -11,7 +11,8 @@ public class Clock : MonoBehaviour
     public int secondsToMinusHealth;
     public bool minusHealth;
     public float timeRemaining;
-    public bool timerIsRunning = false;
+    public bool timerIsRunning;
+    public Button startButton;
 
     private int originalTimeS;
     private int originalTimeM;
@@ -21,10 +22,12 @@ public class Clock : MonoBehaviour
     {
         textClock = GetComponent<TextMeshProUGUI>();
         minusHealth = false;
-        timerIsRunning = true;
+        timerIsRunning = false;
         originalTimeM = Mathf.FloorToInt(timeRemaining / 60);
         originalTimeS = Mathf.FloorToInt(timeRemaining % 60);
         previousMinus = timeRemaining;
+        Button btn = startButton.GetComponent<Button>();
+        btn.onClick.AddListener(StartGame);
     }
 
     // Update is called once per frame
@@ -56,5 +59,11 @@ public class Clock : MonoBehaviour
         float minutes = Mathf.FloorToInt(timeToDisplay / 60);
         float seconds = Mathf.FloorToInt(timeToDisplay % 60);
         textClock.text = string.Format("{0:00}:{1:00} / {2:00}:{3:00}", minutes, seconds, originalTimeM, originalTimeS);
+    }
+
+    void StartGame()
+    {
+        timerIsRunning = true;
+        startButton.gameObject.SetActive(false);
     }
 }

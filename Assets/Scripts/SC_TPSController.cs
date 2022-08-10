@@ -21,6 +21,7 @@ public class SC_TPSController : MonoBehaviour
 
     GameObject prompt;
     GameObject energy;
+    GameObject clock;
 
     void Start()
     {
@@ -28,41 +29,45 @@ public class SC_TPSController : MonoBehaviour
         rotation.y = transform.eulerAngles.y;
         prompt = GameObject.FindGameObjectWithTag("Prompt");
         energy = GameObject.FindGameObjectWithTag("Energy");
+        clock = GameObject.FindGameObjectWithTag("Clock");
     }
 
     void Update()
     {
-        if (characterController.isGrounded)
+        if (clock.GetComponent<Clock>().timerIsRunning)
         {
-            // We are grounded, so recalculate move direction based on axes
-            Vector3 forward = transform.TransformDirection(Vector3.forward);
-            Vector3 right = transform.TransformDirection(Vector3.right);
-            float curSpeedX = canMove ? speed * Input.GetAxis("Vertical") : 0;
-            float curSpeedY = canMove ? speed * Input.GetAxis("Horizontal") : 0;
-            moveDirection = (forward * curSpeedX) + (right * curSpeedY);
-
-            if (Input.GetButton("Jump") && canMove)
+            if (characterController.isGrounded)
             {
-                moveDirection.y = jumpSpeed;
+                // We are grounded, so recalculate move direction based on axes
+                Vector3 forward = transform.TransformDirection(Vector3.forward);
+                Vector3 right = transform.TransformDirection(Vector3.right);
+                float curSpeedX = canMove ? speed * Input.GetAxis("Vertical") : 0;
+                float curSpeedY = canMove ? speed * Input.GetAxis("Horizontal") : 0;
+                moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+
+                if (Input.GetButton("Jump") && canMove)
+                {
+                    moveDirection.y = jumpSpeed;
+                }
             }
-        }
 
-        // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
-        // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
-        // as an acceleration (ms^-2)
-        moveDirection.y -= gravity * Time.deltaTime;
+            // Apply gravity. Gravity is multiplied by deltaTime twice (once here, and once below
+            // when the moveDirection is multiplied by deltaTime). This is because gravity should be applied
+            // as an acceleration (ms^-2)
+            moveDirection.y -= gravity * Time.deltaTime;
 
-        // Move the controller
-        characterController.Move(moveDirection * Time.deltaTime);
+            // Move the controller
+            characterController.Move(moveDirection * Time.deltaTime);
 
-        // Player and Camera rotation
-        if (canMove)
-        {
-            rotation.y += Input.GetAxis("Mouse X") * lookSpeed;
-            rotation.x += -Input.GetAxis("Mouse Y") * lookSpeed;
-            rotation.x = Mathf.Clamp(rotation.x, -lookXLimit, lookXLimit);
-            playerCameraParent.localRotation = Quaternion.Euler(rotation.x, 0, 0);
-            transform.eulerAngles = new Vector2(0, rotation.y);
+            // Player and Camera rotation
+            if (canMove)
+            {
+                rotation.y += Input.GetAxis("Mouse X") * lookSpeed;
+                rotation.x += -Input.GetAxis("Mouse Y") * lookSpeed;
+                rotation.x = Mathf.Clamp(rotation.x, -lookXLimit, lookXLimit);
+                playerCameraParent.localRotation = Quaternion.Euler(rotation.x, 0, 0);
+                transform.eulerAngles = new Vector2(0, rotation.y);
+            }
         }
     }
 
