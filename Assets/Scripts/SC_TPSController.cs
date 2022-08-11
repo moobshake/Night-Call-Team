@@ -140,7 +140,7 @@ public class SC_TPSController : MonoBehaviour
 
             for(int i = 0; i<treatmentOptions.Length; i++){
                 var index = i;
-                treatmentOptions[index].onClick.AddListener(delegate{ChooseTreatment(treatment.options[index]);});
+                treatmentOptions[index].onClick.AddListener(() => ChooseTreatment(treatment.options[index]));
                 treatmentOptions[index].GetComponentInChildren<TMP_Text>().text = treatment.options[index];
             }
         }
@@ -177,7 +177,6 @@ public class SC_TPSController : MonoBehaviour
             currentPatient = "";
         }
 
-        ResetListeners();
         prompt.GetComponent<Prompt>().promptText = outcome;
         prompt.GetComponent<Prompt>().isPromptUpdated = false;
     }
