@@ -28,8 +28,9 @@ public class SC_TPSController : MonoBehaviour
     GameObject energy;
     GameObject clock;
     GameObject foodSpawner;
-
+    GameObject vitalPreview;
     GameObject treatmentMenu;
+
     Button[] treatmentOptions;
     string[] optionArray;
     public TextAsset treatmentFile;
@@ -45,12 +46,13 @@ public class SC_TPSController : MonoBehaviour
         energy = GameObject.FindGameObjectWithTag("Energy");
         clock = GameObject.FindGameObjectWithTag("Clock");
         foodSpawner = GameObject.FindGameObjectWithTag("FoodSpawner");
-
+        vitalPreview = GameObject.FindGameObjectWithTag("Vitals");
         treatmentMenu = GameObject.FindGameObjectWithTag("TreatmentMenu");
         treatmentProgress = new Dictionary<string, List<string>>();
         InstantiateTM();
         toggleTreatment.gameObject.SetActive(false);
         treatmentMenu.transform.localScale = new Vector3(0,0,0);
+        HideVitals();
     }
 
     void Update()
@@ -105,7 +107,7 @@ public class SC_TPSController : MonoBehaviour
             prompt.GetComponent<Prompt>().isPromptUpdated = false;
 
             PatientInfo patient = other.gameObject.GetComponent<PatientInfo>();
-            print(patient.Name);
+            ShowVitals(patient.Condition);
             if(!treatmentProgress.ContainsKey(patient.Name)){
                 treatmentProgress.Add(patient.Name, treatments[patient.Condition]);
             }
@@ -146,6 +148,7 @@ public class SC_TPSController : MonoBehaviour
         if(other.tag == "Patient"){
             treatmentMenu.transform.localScale = new Vector3(0,0,0);
             toggleTreatment.gameObject.SetActive(false);
+            HideVitals();
             currentPatient = " ";
 
             treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
@@ -158,6 +161,7 @@ public class SC_TPSController : MonoBehaviour
         }
     }
 
+    // Treatment Menu
     private void InstantiateTM(){
         Treatments tData = JsonUtility.FromJson<Treatments>(treatmentFile.text);
         treatments = new Dictionary<string, List<string>>();
@@ -181,8 +185,6 @@ public class SC_TPSController : MonoBehaviour
     private void ChooseTreatment(string choice, Button chosenButton){
         ResetListeners();
         List<string> curT = new List<string>(treatmentProgress[currentPatient]);
-
-        print("does it contain " + curT.Contains(choice));
         string outcome = "";
 
         if(curT.Contains(choice)){
@@ -211,6 +213,25 @@ public class SC_TPSController : MonoBehaviour
             var index = i;
             treatmentOptions[index].onClick.RemoveAllListeners();
             treatmentOptions[index].onClick.AddListener(delegate{ChooseTreatment(optionArray[index], treatmentOptions[index]);});
+        }
+    }
+
+    // Vitals Menu
+    private void ShowVitals(string condition){
+        Image[] vitals = vitalPreview.GetComponentsInChildren<Image>();
+        print(vitals.Length);
+        if(condition == "High Blood Pressure"){
+            vitals[0].gameObject.transform.localScale = new Vector3(1,1,1);
+        }else if((condition == "Pneumonia")){
+            vitals[1].gameObject.transform.localScale = new Vector3(1,1,1);
+        }
+
+    }
+
+    private void HideVitals(){
+        Image[] vitals = vitalPreview.GetComponentsInChildren<Image>();
+        foreach(Image i in vitals){
+            i.gameObject.transform.localScale = new Vector3(0,0,0);
         }
     }
 

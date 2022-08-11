@@ -18,6 +18,9 @@ TagManager:
   - DeathCount
   - WellnessCount
   - TreatmentMenu
+  - VitalPneu
+  - VitalHBP
+  - Vitals
   layers:
   - Default
   - TransparentFX
