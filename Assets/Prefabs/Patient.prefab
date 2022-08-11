@@ -754,6 +754,7 @@ GameObject:
   - component: {fileID: 2908892006326813355}
   - component: {fileID: 9132834996563253457}
   - component: {fileID: 8464902006377850807}
+  - component: {fileID: -2691658616367586263}
   m_Layer: 0
   m_Name: Patient
   m_TagString: Patient
@@ -820,6 +821,23 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &-2691658616367586263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528108678064969745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c552211856f35463fa043bd83ade3bb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  Age: 
+  Race: 
+  Gender: 
+  Condition: 
 --- !u!1 &2655445851727722420
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ TagManager:
   - FoodSpawner
   - DeathCount
   - WellnessCount
+  - TreatmentMenu
   layers:
   - Default
   - TransparentFX

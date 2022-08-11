@@ -12,7 +12,6 @@ public class PatientSpawner : MonoBehaviour
     public int level = 1;
 
     // Patient
-    public TextAsset text;
     public TextAsset patientFile;
     public GameObject patient;
     public GameObject[] patients;
@@ -49,7 +48,7 @@ public class PatientSpawner : MonoBehaviour
         patients = GameObject.FindGameObjectsWithTag("Patient");
 
         // Populate patients with details
-        for (int j = 0; j < patients.Length - 1; j++)
+        for (int j = 0; j < patients.Length; j++)
         {
             PatientInfo info = (PatientInfo)patients[j].GetComponent("PatientInfo");
             string x = patientIndex[j];

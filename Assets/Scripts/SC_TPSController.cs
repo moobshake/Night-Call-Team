@@ -1,4 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 
 [RequireComponent(typeof(CharacterController))]
 
@@ -11,6 +15,7 @@ public class SC_TPSController : MonoBehaviour
     public Transform playerCameraParent;
     public float lookSpeed = 2.0f;
     public float lookXLimit = 60.0f;
+    public Button toggleTreatment;
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -24,6 +29,14 @@ public class SC_TPSController : MonoBehaviour
     GameObject clock;
     GameObject foodSpawner;
 
+    GameObject treatmentMenu;
+    Button[] treatmentOptions;
+    string[] optionArray;
+    public TextAsset treatmentFile;
+    private Dictionary<string, List<string>> treatments;
+    private Dictionary<string, List<string>> treatmentProgress;
+    string currentPatient;
+
     void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -32,6 +45,12 @@ public class SC_TPSController : MonoBehaviour
         energy = GameObject.FindGameObjectWithTag("Energy");
         clock = GameObject.FindGameObjectWithTag("Clock");
         foodSpawner = GameObject.FindGameObjectWithTag("FoodSpawner");
+
+        treatmentMenu = GameObject.FindGameObjectWithTag("TreatmentMenu");
+        treatmentProgress = new Dictionary<string, List<string>>();
+        InstantiateTM();
+        toggleTreatment.gameObject.SetActive(false);
+        treatmentMenu.transform.localScale = new Vector3(0,0,0);
     }
 
     void Update()
@@ -84,6 +103,17 @@ public class SC_TPSController : MonoBehaviour
         {
             prompt.GetComponent<Prompt>().promptText = "Collided with patient";
             prompt.GetComponent<Prompt>().isPromptUpdated = false;
+
+            PatientInfo patient = other.gameObject.GetComponent<PatientInfo>();
+            print(patient.Name);
+            if(!treatmentProgress.ContainsKey(patient.Name)){
+                treatmentProgress.Add(patient.Name, treatments[patient.Condition]);
+            }
+
+            currentPatient = patient.Name;
+            toggleTreatment.GetComponentInChildren<TMP_Text>().text = "Treat "+ patient.Name;
+            toggleTreatment.gameObject.SetActive(true);
+
         }
         if (other.tag == "Food")
         {
@@ -111,4 +141,77 @@ public class SC_TPSController : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
+
+    private void OnTriggerExit(Collider other) {
+        if(other.tag == "Patient"){
+            treatmentMenu.transform.localScale = new Vector3(0,0,0);
+            toggleTreatment.gameObject.SetActive(false);
+            currentPatient = " ";
+
+            treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
+            for(int i = 0; i<treatmentOptions.Length; i++){
+                var index = i;
+                if(!treatmentOptions[index].interactable){
+                    treatmentOptions[index].interactable = true;
+                }
+            }
+        }
+    }
+
+    private void InstantiateTM(){
+        Treatments tData = JsonUtility.FromJson<Treatments>(treatmentFile.text);
+        treatments = new Dictionary<string, List<string>>();
+
+        foreach(Treatment treatment in tData.treatments){
+            List<string> steps = new List<string>(treatment.steps);
+            treatments.Add(treatment.condition, steps);
+            
+            treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
+            optionArray = treatment.options;
+
+            for(int i = 0; i<treatmentOptions.Length; i++){
+                var index = i;
+                treatmentOptions[index].onClick.RemoveAllListeners();
+                treatmentOptions[index].onClick.AddListener(() => ChooseTreatment(treatment.options[index], treatmentOptions[index]));
+                treatmentOptions[index].GetComponentInChildren<TMP_Text>().text = treatment.options[index];
+            }
+        }
+    }
+
+    private void ChooseTreatment(string choice, Button chosenButton){
+        ResetListeners();
+        List<string> curT = new List<string>(treatmentProgress[currentPatient]);
+
+        print("does it contain " + curT.Contains(choice));
+        string outcome = "";
+
+        if(curT.Contains(choice)){
+            chosenButton.interactable = false;
+            curT.Remove(choice);
+            outcome = "Correct choice!";
+            treatmentProgress[currentPatient] = curT;
+
+        }else{
+            outcome = "Wrong choice D:";
+        }
+
+        if(treatmentProgress[currentPatient].Count == 1){
+            outcome = "Congrats " + currentPatient + " has been treated";
+            treatmentProgress.Remove(currentPatient);
+            currentPatient = "";
+        }
+
+        prompt.GetComponent<Prompt>().promptText = outcome;
+        prompt.GetComponent<Prompt>().isPromptUpdated = false;
+    }
+
+    private void ResetListeners(){
+        treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
+        for(int i = 0; i<treatmentOptions.Length; i++){
+            var index = i;
+            treatmentOptions[index].onClick.RemoveAllListeners();
+            treatmentOptions[index].onClick.AddListener(delegate{ChooseTreatment(optionArray[index], treatmentOptions[index]);});
+        }
+    }
+
 }
