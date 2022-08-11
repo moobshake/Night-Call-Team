@@ -22,6 +22,7 @@ public class SC_TPSController : MonoBehaviour
     GameObject prompt;
     GameObject energy;
     GameObject clock;
+    GameObject foodSpawner;
 
     void Start()
     {
@@ -30,6 +31,7 @@ public class SC_TPSController : MonoBehaviour
         prompt = GameObject.FindGameObjectWithTag("Prompt");
         energy = GameObject.FindGameObjectWithTag("Energy");
         clock = GameObject.FindGameObjectWithTag("Clock");
+        foodSpawner = GameObject.FindGameObjectWithTag("FoodSpawner");
     }
 
     void Update()
@@ -83,6 +85,11 @@ public class SC_TPSController : MonoBehaviour
             prompt.GetComponent<Prompt>().promptText = "Collided with patient";
             prompt.GetComponent<Prompt>().isPromptUpdated = false;
         }
+        if (other.tag == "Food")
+        {
+            prompt.GetComponent<Prompt>().promptText = "Press E to eat food!";
+            prompt.GetComponent<Prompt>().isPromptUpdated = false;
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -93,6 +100,15 @@ public class SC_TPSController : MonoBehaviour
             prompt.GetComponent<Prompt>().isPromptUpdated = false;
             energy.GetComponent<Energy>().energyLevel += 1;
             energy.GetComponent<Energy>().isEnergyUpdated = false;
+        }
+        if (Input.GetKey(KeyCode.E) && other.tag == "Food")
+        {
+            prompt.GetComponent<Prompt>().promptText = "Ate food, gain 30 energy!";
+            prompt.GetComponent<Prompt>().isPromptUpdated = false;
+            energy.GetComponent<Energy>().energyLevel += 30;
+            energy.GetComponent<Energy>().isEnergyUpdated = false;
+            foodSpawner.GetComponent<FoodSpawner>().isFoodAvailable = false;
+            Destroy(other.gameObject);
         }
     }
 }

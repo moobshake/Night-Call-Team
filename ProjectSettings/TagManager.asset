@@ -12,6 +12,9 @@ TagManager:
   - Bed
   - NapBed
   - Alert
+  - Food
+  - FoodTable
+  - FoodSpawner
   layers:
   - Default
   - TransparentFX
