@@ -1038,6 +1038,7 @@ GameObject:
   - component: {fileID: 226740170}
   - component: {fileID: 226740172}
   - component: {fileID: 226740171}
+  - component: {fileID: 226740173}
   m_Layer: 5
   m_Name: WellnessCount
   m_TagString: WellnessCount
@@ -1163,6 +1164,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226740169}
   m_CullTransparentMesh: 1
+--- !u!114 &226740173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226740169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e904b27c871f64ba6943298f0c2235a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wellnessLevel: 0
+  isWellnessUpdated: 1
 --- !u!1001 &271903801
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3350,6 +3365,7 @@ GameObject:
   - component: {fileID: 864947838}
   - component: {fileID: 864947840}
   - component: {fileID: 864947839}
+  - component: {fileID: 864947841}
   m_Layer: 5
   m_Name: DeathCount
   m_TagString: DeathCount
@@ -3475,6 +3491,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 864947837}
   m_CullTransparentMesh: 1
+--- !u!114 &864947841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 864947837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d847eae9b9ae43a9ad912a028d0a00a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathLevel: 0
+  isDeathUpdated: 1
 --- !u!1001 &922394543
 PrefabInstance:
   m_ObjectHideFlags: 0

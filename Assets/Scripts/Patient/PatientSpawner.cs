@@ -21,21 +21,28 @@ public class PatientSpawner : MonoBehaviour
     public GameObject[] beds;
     public bool[] occupied;
 
+    private bool[] spawnPlace = new bool[] { true, true, false, false, true };
+
     // Helps with assigning patient info to prefab
     private Dictionary<string, Patient> patientsAvail;
     private Dictionary<int, string> patientIndex;
 
+    private bool SpawnNew = false;
+
     void Start()
     {
         beds = GameObject.FindGameObjectsWithTag("Bed");
-        occupied = new bool[beds.Length];
         sleepPos = Quaternion.Euler(-90, 0, 0);
         CreatePatients();
     }
 
     void CreatePatients()
     {
+        occupied = new bool[beds.Length];
+
         GetPatientInfo();
+
+        Shuffle();
 
         // Create patient objects
         for (int i = 0; i < patientsAvail.Count; i++)
@@ -66,7 +73,7 @@ public class PatientSpawner : MonoBehaviour
 
         foreach (GameObject bed in beds)
         {
-            if (!occupied[i])
+            if (!occupied[i] && spawnPlace[i])
             {
                 Vector3 offset = new Vector3(0.0f, 0.4f, 1.0f);
                 Vector3 bedpos = bed.transform.position + offset;
@@ -100,18 +107,27 @@ public class PatientSpawner : MonoBehaviour
 
     private void Update()
     {
-        int count = 0;
-        foreach (bool p in occupied)
+        patients = GameObject.FindGameObjectsWithTag("Patient");
+
+        if (patients.Length == 0 && !SpawnNew)
         {
-            if (p)
-            {
-                count++;
-            }
+            SpawnNew = true;
         }
-        if (count != 3)
+        else if (patients.Length == 0 && SpawnNew)
         {
-            Debug.Log("no it is not 3");
+            CreatePatients();
+            SpawnNew = false;
         }
     }
 
+    private void Shuffle()
+    {
+        for (int i = 0; i < spawnPlace.Length; i++)
+        {
+            int rnd = Random.Range(0, spawnPlace.Length);
+            bool tempGO = spawnPlace[rnd];
+            spawnPlace[rnd] = spawnPlace[i];
+            spawnPlace[i] = tempGO;
+        }
+    }
 }
