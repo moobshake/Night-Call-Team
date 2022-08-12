@@ -30,6 +30,8 @@ public class SC_TPSController : MonoBehaviour
     GameObject foodSpawner;
     GameObject vitalPreview;
     GameObject treatmentMenu;
+    GameObject wellnessCount;
+    GameObject deathCount;
 
     Button[] treatmentOptions;
     string[] optionArray;
@@ -37,6 +39,8 @@ public class SC_TPSController : MonoBehaviour
     private Dictionary<string, List<string>> treatments;
     private Dictionary<string, List<string>> treatmentProgress;
     string currentPatient;
+
+    private bool isTreated = false;
 
     void Start()
     {
@@ -48,6 +52,9 @@ public class SC_TPSController : MonoBehaviour
         foodSpawner = GameObject.FindGameObjectWithTag("FoodSpawner");
         vitalPreview = GameObject.FindGameObjectWithTag("Vitals");
         treatmentMenu = GameObject.FindGameObjectWithTag("TreatmentMenu");
+        wellnessCount = GameObject.FindGameObjectWithTag("WellnessCount");
+        deathCount = GameObject.FindGameObjectWithTag("DeathCount");
+
         treatmentProgress = new Dictionary<string, List<string>>();
         InstantiateTM();
         toggleTreatment.gameObject.SetActive(false);
@@ -116,6 +123,8 @@ public class SC_TPSController : MonoBehaviour
             toggleTreatment.GetComponentInChildren<TMP_Text>().text = "Treat "+ patient.Name;
             toggleTreatment.gameObject.SetActive(true);
 
+            isTreated = false;
+
         }
         if (other.tag == "Food")
         {
@@ -140,6 +149,28 @@ public class SC_TPSController : MonoBehaviour
             energy.GetComponent<Energy>().energyLevel += 30;
             energy.GetComponent<Energy>().isEnergyUpdated = false;
             foodSpawner.GetComponent<FoodSpawner>().isFoodAvailable = false;
+            Destroy(other.gameObject);
+        }
+        if (isTreated && other.tag == "Patient")
+        {
+            isTreated = false;
+            treatmentMenu.transform.localScale = new Vector3(0, 0, 0);
+            toggleTreatment.gameObject.SetActive(false);
+            HideVitals();
+            currentPatient = " ";
+
+            treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
+            for (int i = 0; i < treatmentOptions.Length; i++)
+            {
+                var index = i;
+                if (!treatmentOptions[index].interactable)
+                {
+                    treatmentOptions[index].interactable = true;
+                }
+            }
+
+            wellnessCount.GetComponent<Wellnes>().wellnessLevel += 1;
+            wellnessCount.GetComponent<Wellnes>().isWellnessUpdated = false;
             Destroy(other.gameObject);
         }
     }
@@ -187,13 +218,16 @@ public class SC_TPSController : MonoBehaviour
         List<string> curT = new List<string>(treatmentProgress[currentPatient]);
         string outcome = "";
 
-        if(curT.Contains(choice)){
+        if (curT.Contains(choice)) {
             chosenButton.interactable = false;
             curT.Remove(choice);
             outcome = "Correct choice!";
             treatmentProgress[currentPatient] = curT;
 
-        }else{
+            isTreated = true;
+
+        }
+        else{
             outcome = "Wrong choice D:";
         }
 
@@ -219,7 +253,6 @@ public class SC_TPSController : MonoBehaviour
     // Vitals Menu
     private void ShowVitals(string condition){
         Image[] vitals = vitalPreview.GetComponentsInChildren<Image>();
-        print(vitals.Length);
         if(condition == "High Blood Pressure"){
             vitals[0].gameObject.transform.localScale = new Vector3(1,1,1);
         }else if((condition == "Pneumonia")){

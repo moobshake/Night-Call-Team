@@ -24,8 +24,6 @@ public class PatientSpawner : MonoBehaviour
     // Helps with assigning patient info to prefab
     private Dictionary<string, Patient> patientsAvail;
     private Dictionary<int, string> patientIndex;
-    private string[] textArray;
-    private string[] fields;
 
     void Start()
     {
@@ -97,6 +95,22 @@ public class PatientSpawner : MonoBehaviour
             patientsAvail.Add(p.Name, p);
             patientIndex.Add(index, p.Name);
             index++;
+        }
+    }
+
+    private void Update()
+    {
+        int count = 0;
+        foreach (bool p in occupied)
+        {
+            if (p)
+            {
+                count++;
+            }
+        }
+        if (count != 3)
+        {
+            Debug.Log("no it is not 3");
         }
     }
 
