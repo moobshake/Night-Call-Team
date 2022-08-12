@@ -5,11 +5,7 @@ using UnityEngine;
 
 public class PatientSpawner : MonoBehaviour
 {
-
-    // General Patients Count
-    public int wellnessCount = 0;
-    public int deathCount = 0;
-    public int level = 1;
+    public bool gameStarted = false;
 
     // Patient
     public TextAsset patientFile;
@@ -29,15 +25,25 @@ public class PatientSpawner : MonoBehaviour
 
     private bool SpawnNew = false;
 
-    void Start()
+    GameObject deathCount;
+    private float currentTime;
+    public int SecondsToDie = 20;
+
+    private void Start()
     {
         beds = GameObject.FindGameObjectsWithTag("Bed");
+        deathCount = GameObject.FindGameObjectWithTag("DeathCount");
         sleepPos = Quaternion.Euler(-90, 0, 0);
+    }
+
+    public void StartGame()
+    {
         CreatePatients();
     }
 
     void CreatePatients()
     {
+        currentTime = Time.time;
         occupied = new bool[beds.Length];
 
         GetPatientInfo();
@@ -109,14 +115,23 @@ public class PatientSpawner : MonoBehaviour
     {
         patients = GameObject.FindGameObjectsWithTag("Patient");
 
-        if (patients.Length == 0 && !SpawnNew)
+        if (patients.Length == 0 && !SpawnNew && gameStarted)
         {
             SpawnNew = true;
         }
-        else if (patients.Length == 0 && SpawnNew)
+        else if (patients.Length == 0 && SpawnNew && gameStarted)
         {
             CreatePatients();
             SpawnNew = false;
+        }
+        else if (Time.time - currentTime > 20 && patients.Length != 0 && gameStarted)
+        {
+            foreach (GameObject p in patients)
+            {
+                Destroy(p.gameObject);
+                deathCount.GetComponent<Death>().deathLevel += 1;
+            }
+            deathCount.GetComponent<Death>().isDeathUpdated = false;
         }
     }
 

@@ -21,6 +21,8 @@ TagManager:
   - VitalPneu
   - VitalHBP
   - Vitals
+  - PatientSpawner
+  - Restart
   layers:
   - Default
   - TransparentFX

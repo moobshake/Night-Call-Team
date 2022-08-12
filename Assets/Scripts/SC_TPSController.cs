@@ -8,6 +8,7 @@ using TMPro;
 
 public class SC_TPSController : MonoBehaviour
 {
+
     public float speed = 7.5f;
     public float initialSpeed = 7.5f;
     public float jumpSpeed = 8.0f;
@@ -31,7 +32,6 @@ public class SC_TPSController : MonoBehaviour
     GameObject vitalPreview;
     GameObject treatmentMenu;
     GameObject wellnessCount;
-    GameObject deathCount;
 
     Button[] treatmentOptions;
     string[] optionArray;
@@ -53,7 +53,6 @@ public class SC_TPSController : MonoBehaviour
         vitalPreview = GameObject.FindGameObjectWithTag("Vitals");
         treatmentMenu = GameObject.FindGameObjectWithTag("TreatmentMenu");
         wellnessCount = GameObject.FindGameObjectWithTag("WellnessCount");
-        deathCount = GameObject.FindGameObjectWithTag("DeathCount");
 
         treatmentProgress = new Dictionary<string, List<string>>();
         InstantiateTM();

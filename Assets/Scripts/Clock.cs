@@ -13,13 +13,21 @@ public class Clock : MonoBehaviour
     public float timeRemaining;
     public bool timerIsRunning;
     public Button startButton;
-
+    public Button restartButton;
+    private float originalTime;
     private int originalTimeS;
     private int originalTimeM;
     private float previousMinus;
 
+    GameObject patientSpawner;
+
+    public TextMeshProUGUI summarySavedText;
+    public TextMeshProUGUI summaryDieText;
+
     void Start()
     {
+        originalTime = timeRemaining;
+        patientSpawner = GameObject.FindGameObjectWithTag("PatientSpawner");
         textClock = GetComponent<TextMeshProUGUI>();
         minusHealth = false;
         timerIsRunning = false;
@@ -28,6 +36,7 @@ public class Clock : MonoBehaviour
         previousMinus = timeRemaining;
         Button btn = startButton.GetComponent<Button>();
         btn.onClick.AddListener(StartGame);
+        restartButton.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -46,11 +55,52 @@ public class Clock : MonoBehaviour
             }
             else
             {
-                Debug.Log("Time has run out!");
                 timeRemaining = 0;
                 timerIsRunning = false;
+                EndGame();
             }
         }
+    }
+
+    void EndGame()
+    {
+        patientSpawner.GetComponent<PatientSpawner>().gameStarted = false;
+
+        GameObject[] patients = GameObject.FindGameObjectsWithTag("Patient");
+        foreach (GameObject p in patients)
+        {
+            Destroy(p.gameObject);
+        }
+        GameObject wellnessCount = GameObject.FindGameObjectWithTag("WellnessCount");
+        GameObject deathCount = GameObject.FindGameObjectWithTag("DeathCount");
+
+        summarySavedText.text = "You have saved: " + wellnessCount.GetComponent<Wellnes>().wellnessLevel.ToString();
+        summaryDieText.text = "Unable to treat: " + deathCount.GetComponent<Death>().deathLevel.ToString();
+        restartButton.gameObject.SetActive(true);
+        Button rBtn = restartButton.GetComponent<Button>();
+        rBtn.onClick.AddListener(Restart);
+    }
+
+    void Restart()
+    {
+        timeRemaining = originalTime;
+        restartButton.gameObject.SetActive(false);
+
+        GameObject energy = GameObject.FindGameObjectWithTag("Energy");
+        energy.GetComponent<Energy>().energyLevel = energy.GetComponent<Energy>().energyLevelMax;
+        energy.GetComponent<Energy>().isEnergyUpdated = false;
+
+        GameObject wellnessCount = GameObject.FindGameObjectWithTag("WellnessCount");
+        wellnessCount.GetComponent<Wellnes>().wellnessLevel = 0;
+        wellnessCount.GetComponent<Wellnes>().isWellnessUpdated = false;
+
+        GameObject deathCount = GameObject.FindGameObjectWithTag("DeathCount");
+        deathCount.GetComponent<Death>().deathLevel = 0;
+        deathCount.GetComponent<Death>().isDeathUpdated = false;
+
+        timerIsRunning = true;
+        patientSpawner.GetComponent<PatientSpawner>().StartGame();
+        patientSpawner.GetComponent<PatientSpawner>().gameStarted = true;
     }
 
     void DisplayTime(float timeToDisplay)
@@ -65,5 +115,7 @@ public class Clock : MonoBehaviour
     {
         timerIsRunning = true;
         startButton.gameObject.SetActive(false);
+        patientSpawner.GetComponent<PatientSpawner>().StartGame();
+        patientSpawner.GetComponent<PatientSpawner>().gameStarted = true;
     }
 }
