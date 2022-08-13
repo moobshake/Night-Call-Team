@@ -126,6 +126,8 @@ public class PatientSpawner : MonoBehaviour
         }
         else if (Time.time - currentTime > 20 && patients.Length != 0 && gameStarted)
         {
+            GameObject doctor = GameObject.FindGameObjectWithTag("Doctor");
+            doctor.GetComponent<SC_TPSController>().RemoveOverlay();
             foreach (GameObject p in patients)
             {
                 Destroy(p.gameObject);

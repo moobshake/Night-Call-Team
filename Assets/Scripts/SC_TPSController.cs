@@ -191,6 +191,24 @@ public class SC_TPSController : MonoBehaviour
         }
     }
 
+    public void RemoveOverlay()
+    {
+        treatmentMenu.transform.localScale = new Vector3(0, 0, 0);
+        toggleTreatment.gameObject.SetActive(false);
+        HideVitals();
+        currentPatient = " ";
+
+        treatmentOptions = treatmentMenu.GetComponentsInChildren<Button>();
+        for (int i = 0; i < treatmentOptions.Length; i++)
+        {
+            var index = i;
+            if (!treatmentOptions[index].interactable)
+            {
+                treatmentOptions[index].interactable = true;
+            }
+        }
+    }
+
     // Treatment Menu
     private void InstantiateTM(){
         Treatments tData = JsonUtility.FromJson<Treatments>(treatmentFile.text);
@@ -223,10 +241,9 @@ public class SC_TPSController : MonoBehaviour
             outcome = "Correct choice!";
             treatmentProgress[currentPatient] = curT;
 
-            
-
         }
-        else{
+        else
+        {
             outcome = "Wrong choice D:";
         }
 

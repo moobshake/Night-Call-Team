@@ -64,6 +64,9 @@ public class Clock : MonoBehaviour
 
     void EndGame()
     {
+        GameObject doctor = GameObject.FindGameObjectWithTag("Doctor");
+        doctor.GetComponent<SC_TPSController>().RemoveOverlay();
+
         patientSpawner.GetComponent<PatientSpawner>().gameStarted = false;
 
         GameObject[] patients = GameObject.FindGameObjectsWithTag("Patient");
