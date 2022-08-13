@@ -223,7 +223,7 @@ public class SC_TPSController : MonoBehaviour
             outcome = "Correct choice!";
             treatmentProgress[currentPatient] = curT;
 
-            isTreated = true;
+            
 
         }
         else{
@@ -231,6 +231,7 @@ public class SC_TPSController : MonoBehaviour
         }
 
         if(treatmentProgress[currentPatient].Count == 1){
+            isTreated = true;
             outcome = "Congrats " + currentPatient + " has been treated";
             treatmentProgress.Remove(currentPatient);
             currentPatient = "";
